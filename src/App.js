@@ -13,7 +13,7 @@ export default function App() {
       {/* 카드 1 */}
       <div className="port-container">
         <div className="port-video">
-          <video src="https://winjun1128.github.io/web-portfolio/videos/miniafterfisrt.mp4" controls />
+          <video src="https://winjun1128.github.io/web-portfolio/videos/miniafterfirst.mp4" controls />
         </div>
         <div className="port-info">
           <h3>주제 : 커뮤니티 기반 크라우드 펀딩 사이트</h3>
@@ -78,7 +78,7 @@ export default function App() {
       {/* 카드 3 */}
       <div className="port-container">
         <div className="port-video">
-          <video src="https://winjun1128.github.io/web-portfolio/videos/miniafterthird.mkv" controls />
+          <video src="https://winjun1128.github.io/web-portfolio/videos/miniafterthird.mp4" controls />
         </div>
         <div className="port-info">
           <h3>주제 : 주유소/전기차 충전소 정보 제공 및 추천</h3>
@@ -99,7 +99,7 @@ export default function App() {
       <div id="role-3" className={`port-role-container ${showRole3 ? "open" : ""}`} aria-hidden={!showRole3}>
         <div className="port-role-inner">
           <div className="port-video">
-            <video src="https://winjun1128.github.io/web-portfolio/videos/minimythird.mkv" controls />
+            <video src="https://winjun1128.github.io/web-portfolio/videos/minimythird.mp4" controls />
           </div>
           <div className="port-info">
             <p>역할 : 경로 페이지 전담 및 주유소/충전소 페이지 일부 구현</p>
