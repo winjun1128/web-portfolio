@@ -1,38 +1,142 @@
-.App {
-  text-align: center;
+.App{ text-align:center; }
+
+/* -------- 카드 공통 -------- */
+.port-container,
+.port-role-container{
+  --card-bg:#ffffff;
+  --card-bg2:#f8fafc;
+  --card-border:#e5e7eb;
+  --card-accent:#f59e0b;
+  --shadow-sm:0 2px 8px rgba(0,0,0,.06);
+  --shadow-lg:0 12px 24px rgba(0,0,0,.12);
+
+  width:100%;
+  max-width:1200px;
+  display:flex;
+  gap:24px;
+  background:linear-gradient(180deg,var(--card-bg),var(--card-bg2));
+  border:1px solid var(--card-border);
+  border-radius:16px;
+  box-shadow:var(--shadow-sm);
+  position:relative;
+  overflow:hidden;
+  transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .3s ease;
+  margin:0 auto;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* 컨테이너 간 간격 */
+.port-container{ margin:24px auto 0; }
+.port-container:first-of-type{ margin-top:0; }
+.port-role-container + .port-container{ margin-top:24px; }
+
+/* 좌측 포인트 바 */
+.port-container::before{
+  content:"";
+  position:absolute; left:0; top:0; bottom:0;
+  width:6px; background:var(--card-accent); opacity:.9;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* hover 효과 */
+.port-container:hover,
+.port-container:focus-within{
+  transform:translateY(-4px);
+  box-shadow:var(--shadow-lg);
+  border-color:var(--card-accent);
+  background:linear-gradient(180deg,#fff, color-mix(in srgb, var(--card-accent) 6%, #fff));
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+/* 내용 비율 */
+.port-video{ flex:1 1 0; min-width:0; }
+.port-info { flex:1 1 0; min-width:0; text-align:left; background:beige; }
+.port-info p, .port-info h3{ margin-left:1%; }
+
+/* 비디오 */
+.port-video video{
+  display:block; width:100%; height:auto; border-radius:12px;
+  transition:transform .25s ease, box-shadow .25s ease;
+}
+.port-container:hover .port-video video{
+  transform:scale(1.02);
+  box-shadow:0 18px 40px rgba(0,0,0,.30), 0 6px 12px rgba(0,0,0,.18), 0 0 0 1px color-mix(in srgb, var(--card-accent) 35%, #0000);
 }
 
-.App-link {
-  color: #61dafb;
+/* 링크 줄바꿈 */
+.port-info a{ overflow-wrap:anywhere; }
+
+/* -------- 역할 패널(슬라이드) -------- */
+/* 닫힘: 높이 0, 보더는 '투명'(두께 유지) */
+.port-role-container{
+  border-top:0;
+  border-left:1px solid transparent;
+  border-right:1px solid transparent;
+  border-bottom:1px solid transparent;
+  border-radius:0 0 16px 16px;
+
+  display:grid;
+  grid-template-rows:0fr;
+  overflow:hidden;
+  opacity:0;
+  transform:translateY(-12px);
+  transform-origin:top;
+  pointer-events:none;
+  transition:
+    grid-template-rows .38s cubic-bezier(.2,.8,.2,1),
+    opacity .28s ease,
+    transform .38s cubic-bezier(.2,.8,.2,1);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* 열림: 색만 표시 */
+.port-role-container.open{
+  grid-template-rows:1fr;
+  opacity:1;
+  transform:translateY(0);
+  pointer-events:auto;
+
+  border-left-color:var(--card-border);
+  border-right-color:var(--card-border);
+  border-bottom-color:var(--card-border);
+}
+
+/* 내부 레이아웃 */
+.port-role-inner{ overflow:hidden; display:flex; gap:24px; }
+.port-role-inner .port-video{ flex:1 1 0; min-width:0; }
+.port-role-inner .port-info { flex:1 1 0; min-width:0; text-align:left; background:beige; }
+
+/* 카드와 역할 패널 연결감: 아래 보더/라운드 제거 */
+.port-container:has(+ .port-role-container.open){
+  border-bottom:0;
+  border-bottom-left-radius:0;
+  border-bottom-right-radius:0;
+}
+
+/* 열림일 때 hover에도 아래쪽 보더가 다시 생기지 않도록 */
+.port-container:hover:has(+ .port-role-container.open){
+  border-bottom-color:transparent;
+}
+
+/*******/
+/* ① 포트컨테이너를 호버/포커스하면, 아래 롤컨테이너의 보더도 주황으로 */
+.port-container:hover + .port-role-container.open,
+.port-container:focus-within + .port-role-container.open{
+  border-left-color: var(--card-accent);
+  border-right-color: var(--card-accent);
+  border-bottom-color: var(--card-accent);
+}
+
+/* ② 롤컨테이너를 호버/포커스하면, 위 포트컨테이너 보더도 주황으로 */
+.port-container:has(+ .port-role-container.open:hover),
+.port-container:has(+ .port-role-container.open:focus-within){
+  border-color: var(--card-accent);
+}
+
+/* ③ 이어붙인 경계(중간 이음새)는 계속 비우기 */
+.port-container:has(+ .port-role-container.open){
+  border-bottom: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+/* 호버 중에도 아래쪽 보더가 다시 생기지 않도록 */
+.port-container:hover:has(+ .port-role-container.open),
+.port-container:has(+ .port-role-container.open:hover){
+  border-bottom-color: transparent;
 }
