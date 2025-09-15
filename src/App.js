@@ -13,7 +13,7 @@ export default function App() {
       {/* 카드 1 */}
       <div className="port-container">
         <div className="port-video">
-          <video src="https://winjun1128.github.io/web-portfolio/videos/home.mp4" controls />
+          <video src="https://winjun1128.github.io/web-portfolio/videos/afterfisrt.mp4" controls />
         </div>
         <div className="port-info">
           <h3>주제 : 커뮤니티 기반 크라우드 펀딩 사이트</h3>
@@ -35,7 +35,7 @@ export default function App() {
       <div id="role-1" className={`port-role-container ${showRole1 ? "open" : ""}`} aria-hidden={!showRole1}>
         <div className="port-role-inner">
           <div className="port-video">
-            <video src="https://winjun1128.github.io/web-portfolio/videos/first.mp4" controls />
+            <video src="https://winjun1128.github.io/web-portfolio/videos/myfirst.mp4" controls />
           </div>
           <div className="port-info">
             <p>역할 : 홈, 리스트, 상품, 게시판 페이지 구현 및 팀 리드</p>
@@ -46,7 +46,7 @@ export default function App() {
       {/* 카드 2 */}
       <div className="port-container">
         <div className="port-video">
-          <video src="https://winjun1128.github.io/web-portfolio/videos/second.mp4" controls />
+          <video src="https://winjun1128.github.io/web-portfolio/videos/aftersecond.mp4" controls />
         </div>
         <div className="port-info">
           <h3>주제 : 기업 스케줄 및 할일 관리 서비스</h3>
@@ -67,7 +67,7 @@ export default function App() {
       <div id="role-2" className={`port-role-container ${showRole2 ? "open" : ""}`} aria-hidden={!showRole2}>
         <div className="port-role-inner">
           <div className="port-video">
-            <video src="https://winjun1128.github.io/web-portfolio/videos/second.mp4" controls />
+            <video src="https://winjun1128.github.io/web-portfolio/videos/mysecond.mp4" controls />
           </div>
           <div className="port-info">
             <p>역할 : 작업관리, 메모, 알림 기능 설계·구현</p>
@@ -78,7 +78,7 @@ export default function App() {
       {/* 카드 3 */}
       <div className="port-container">
         <div className="port-video">
-          <video src="https://winjun1128.github.io/web-portfolio/videos/third.mkv" controls />
+          <video src="https://winjun1128.github.io/web-portfolio/videos/afterthird.mkv" controls />
         </div>
         <div className="port-info">
           <h3>주제 : 주유소/전기차 충전소 정보 제공 및 추천</h3>
@@ -99,7 +99,7 @@ export default function App() {
       <div id="role-3" className={`port-role-container ${showRole3 ? "open" : ""}`} aria-hidden={!showRole3}>
         <div className="port-role-inner">
           <div className="port-video">
-            <video src="https://winjun1128.github.io/web-portfolio/videos/third.mkv" controls />
+            <video src="https://winjun1128.github.io/web-portfolio/videos/mythird.mkv" controls />
           </div>
           <div className="port-info">
             <p>역할 : 경로 페이지 전담 및 주유소/충전소 페이지 일부 구현</p>
