@@ -8,7 +8,7 @@ function App() {
 
       <div className="port-container">
         <div className="port-video">
-          <video src={"https://winjun1128.github.io/web-portfolio/videos/first.mp4"} autoPlay muted loop></video>
+          <video src={"https://github.com/winjun1128/web-portfolio/tree/main/public/videos/first.mp4"} autoPlay muted loop></video>
         </div>
         <div className="port-info">
           <h3>주제 : 음식어쩌고</h3>
@@ -20,7 +20,7 @@ function App() {
 
       <div className="port-container">
         <div className="port-video">
-          <video src={"https://winjun1128.github.io/web-portfolio/videos/second.mp4"} autoPlay muted loop></video>
+          <video src={"https://github.com/winjun1128/web-portfolio/tree/main/public/videos/second.mp4"} autoPlay muted loop></video>
         </div>
         <div className="port-info">
           <h3>주제 : 음식어쩌고</h3>
@@ -33,7 +33,7 @@ function App() {
 
       <div className="port-container">
         <div className="port-video">
-          <video src={"https://winjun1128.github.io/web-portfolio/videos/third.mkv"} autoPlay muted loop></video>
+          <video src={"https://github.com/winjun1128/web-portfolio/tree/main/public/videos/third.mkv"} autoPlay muted loop></video>
         </div>
         <div className="port-info">
           <h3>주제 : 음식어쩌고</h3>
