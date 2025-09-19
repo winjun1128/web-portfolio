@@ -325,3 +325,26 @@
 @media (prefers-reduced-motion: reduce){
   .port-container, .port-role-container{ transition:none !important; }
 }
+
+/**********마지막 여백**************/
+/* 1) 마지막 역할 패널이 열려 있으면 → 패널에 여백 */
+.App > .port-role-container.open:last-child{
+  margin-bottom: 10vh;
+}
+
+/* 2) 마지막 카드가 닫혀있어(뒤 패널이 마지막 + 닫힘) → 카드에 여백 */
+.App > .port-container:has(+ .port-role-container:last-child:not(.open)){
+  margin-bottom: 10vh;
+}
+
+/* 선택: 모바일에서만 더 크게 */
+@media (max-width:768px){
+  .App > .port-role-container.open:last-child,
+  .App > .port-container:has(+ .port-role-container:last-child:not(.open)){
+    margin-bottom: 14vh;
+  }
+}
+
+h4{
+  color: #f59e0b;
+}
