@@ -1,19 +1,43 @@
-.App{ text-align:center; }
+/* ===============================
+   Global
+================================ */
+.App{
+  text-align:center;
+  padding:16px 16px calc(16px + env(safe-area-inset-bottom));
+  background:#fff;
+}
 
-/* -------- 카드 공통 -------- */
-.port-container,
-.port-role-container{
+h4{ color:#f59e0b; }
+
+/* 색/그림자 토큰 */
+:root{
   --card-bg:#ffffff;
   --card-bg2:#f8fafc;
   --card-border:#e5e7eb;
-  --card-accent:#f59e0b;
+  --card-accent:#f59e0b;      /* 주황 포인트 */
+  --sep-fill: color-mix(in srgb, var(--card-accent) 10%, #fff7e6); /* 내부 구분띠 색 */
+  --sep-line: color-mix(in srgb, var(--card-accent) 35%, #fff);
   --shadow-sm:0 2px 8px rgba(0,0,0,.06);
   --shadow-lg:0 12px 24px rgba(0,0,0,.12);
+}
 
+.App > h1{
+  margin:8px 0 20px;
+  font-size:1.9rem;
+  letter-spacing:-.2px;
+}
+
+/* ===============================
+   카드(상단) & 역할 패널(하단-항상 펼침)
+   => 두 컴포넌트를 "한 덩어리"처럼 보이게
+================================ */
+.port-container,
+.port-role-container{
   width:100%;
   max-width:1200px;
   display:flex;
   gap:24px;
+  margin:24px auto 0;
   background:linear-gradient(180deg,var(--card-bg),var(--card-bg2));
   border:2px solid var(--card-border);
   border-radius:16px;
@@ -21,22 +45,26 @@
   position:relative;
   overflow:hidden;
   transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .3s ease;
-  margin:0 auto;
 }
 
-/* 컨테이너 간 간격 */
-.port-container{ margin:24px auto 0; }
+/* 첫 카드만 상단 여백 제거 */
 .port-container:first-of-type{ margin-top:0; }
-.port-role-container + .port-container{ margin-top:24px; }
 
-/* 좌측 포인트 바 */
-.port-container::before{
+/* 좌측 주황 포인트 바(항상 표시) */
+.port-container::before,
+.port-role-container::before{
   content:"";
   position:absolute; left:0; top:0; bottom:0;
   width:6px; background:var(--card-accent); opacity:.9;
+  pointer-events:none;
 }
 
-/* hover 효과 */
+/* 카드에서는 상단 라운드에 맞춰 살짝 둥글게 */
+.port-container::before{ border-radius:16px 0 0 0; }
+/* 역할 패널에서는 하단 라운드 */
+.port-role-container::before{ border-radius:0 0 0 16px; }
+
+/* Hover 효과(데스크톱) */
 .port-container:hover,
 .port-container:focus-within{
   transform:translateY(-4px);
@@ -45,14 +73,17 @@
   background:linear-gradient(180deg,#fff, color-mix(in srgb, var(--card-accent) 6%, #fff));
 }
 
-/* 내용 비율 */
-.port-video{ flex:1 1 0; min-width:0; }
-.port-info { flex:1 1 0; min-width:0; text-align:left; background:beige; }
-.port-info p, .port-info h3{ margin-left:1%; }
+/* 레이아웃 비율 */
+.port-video{ flex:1 1 0; min-width:0; display:flex; }
+.port-info { flex:1 1 0; min-width:0; text-align:left; background:beige; padding:16px 20px; }
 
-/* 비디오 */
+/* 비디오(위/아래 동일) */
 .port-video video{
-  display:block; width:100%; height:auto; border-radius:12px;
+  width:100%; height:100%;
+  aspect-ratio:16/9;
+  object-fit:cover;
+  display:block;
+  border-radius:12px;
   transition:transform .25s ease, box-shadow .25s ease;
 }
 .port-container:hover .port-video video{
@@ -63,195 +94,114 @@
 /* 링크 줄바꿈 */
 .port-info a{ overflow-wrap:anywhere; }
 
-/* -------- 역할 패널(슬라이드) -------- */
-/* 닫힘: 높이 0, 보더는 '투명'(두께 유지) */
-.port-role-container{
-  border-top:0;
-  border-left:2px solid transparent;
-  border-right:2px solid transparent;
-  border-bottom:2px solid transparent;
-  border-radius:0 0 16px 16px;
-
-  display:grid;
-  grid-template-rows:0fr;
-  overflow:hidden;
-  opacity:0;
-  transform:translateY(-12px);
-  transform-origin:top;
-  pointer-events:none;
-  transition:
-    grid-template-rows .38s cubic-bezier(.2,.8,.2,1),
-    opacity .28s ease,
-    transform .38s cubic-bezier(.2,.8,.2,1);
-}
-
-/* 열림: 색만 표시 */
-.port-role-container.open{
-  grid-template-rows:1fr;
-  opacity:1;
-  transform:translateY(0);
-  pointer-events:auto;
-
-  border-left-color:var(--card-border);
-  border-right-color:var(--card-border);
-  border-bottom-color:var(--card-border);
-}
-
-/* 내부 레이아웃 */
-.port-role-inner{ overflow:hidden; display:flex; gap:24px; }
-.port-role-inner .port-video{ flex:1 1 0; min-width:0; }
-.port-role-inner .port-info { flex:1 1 0; min-width:0; text-align:left; background:beige; }
-
-/* 카드와 역할 패널 연결감: 아래 보더/라운드 제거 */
-.port-container:has(+ .port-role-container.open){
-  border-bottom:0;
-  border-bottom-left-radius:0;
-  border-bottom-right-radius:0;
-}
-
-/* 열림일 때 hover에도 아래쪽 보더가 다시 생기지 않도록 */
-.port-container:hover:has(+ .port-role-container.open){
-  border-bottom-color:transparent;
-}
-
-/*******/
-/* ① 포트컨테이너를 호버/포커스하면, 아래 롤컨테이너의 보더도 주황으로 */
-.port-container:hover + .port-role-container.open,
-.port-container:focus-within + .port-role-container.open{
-  border-left-color: var(--card-accent);
-  border-right-color: var(--card-accent);
-  border-bottom-color: var(--card-accent);
-}
-
-/* ② 롤컨테이너를 호버/포커스하면, 위 포트컨테이너 보더도 주황으로 */
-.port-container:has(+ .port-role-container.open:hover),
-.port-container:has(+ .port-role-container.open:focus-within){
-  border-color: var(--card-accent);
-}
-
-/* ③ 이어붙인 경계(중간 이음새)는 계속 비우기 */
-.port-container:has(+ .port-role-container.open){
-  border-bottom: 0;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-}
-/* 호버 중에도 아래쪽 보더가 다시 생기지 않도록 */
-.port-container:hover:has(+ .port-role-container.open),
-.port-container:has(+ .port-role-container.open:hover){
-  border-bottom-color: transparent;
-}
-
-/********각종 디테일한 스타일***********/
-/* === port-info 타이포 & 구분선 === */
-.port-info{
-  /* 기존 beige 유지 + 내부 여백 정리 */
-  background: beige;
-  padding: 16px 20px;
-}
-
-/* 타이틀 */
+/* ===============================
+   정보 영역 타이포/링크
+================================ */
 .port-info h3{
-  margin: 0 0 10px 0;
-  font-size: 1.15rem;
-  font-weight: 800;
-  letter-spacing: -.2px;
-  color: #222;
+  margin:0 0 10px 0;
+  font-size:1.15rem;
+  font-weight:800;
+  letter-spacing:-.2px;
+  color:#222;
 }
-
-/* 각 줄(문단) 사이에 얇은 구분선 */
 .port-info p{
-  margin: 0;
-  padding: 10px 0;
-  border-top: 1px dashed var(--card-border);
+  margin:0;
+  padding:10px 0;
+  border-top:1px dashed var(--card-border);
 }
-.port-info p:first-of-type{ border-top: 0; }
+.port-info p:first-of-type{ border-top:0; }
 
-/* 라벨(chip)처럼 보이게 */
+/* 라벨 칩 */
 .port-info p > strong{
-  display: inline-block;
-  margin-right: 8px;
-  padding: 2px 10px;
-  border-radius: 999px;
-  font-weight: 700;
-  line-height: 1.1;
+  display:inline-block;
+  margin-right:8px;
+  padding:2px 10px;
+  border-radius:999px;
+  font-weight:700;
+  line-height:1.1;
   color: color-mix(in srgb, var(--card-accent) 65%, #111);
   background: color-mix(in srgb, var(--card-accent) 14%, #fff);
-  border: 1px solid color-mix(in srgb, var(--card-accent) 35%, #fff);
+  border:1px solid color-mix(in srgb, var(--card-accent) 35%, #fff);
 }
 
-/* 긴 URL 줄바꿈 + 링크 스타일 */
+/* 링크 스타일 */
 .port-info a{
-  overflow-wrap: anywhere;
-  font-weight: 600;
-  text-decoration: underline;                 /* 기본은 밑줄 */
-  text-decoration-color: transparent;        /* 밑줄 숨겨두고 */
-  text-underline-offset: 3px;
-  transition: color .18s ease, text-decoration-color .18s ease, box-shadow .18s ease;
-  color: color-mix(in srgb, var(--card-accent) 40%, #0b79f7);  /* 파랑 + 포인트 섞음 */
+  font-weight:600;
+  text-decoration:underline;
+  text-decoration-color:transparent;
+  text-underline-offset:3px;
+  transition:color .18s ease, text-decoration-color .18s ease, box-shadow .18s ease;
+  color: color-mix(in srgb, var(--card-accent) 40%, #0b79f7);
 }
 .port-info a:hover,
 .port-info a:focus-visible{
   color: color-mix(in srgb, var(--card-accent) 65%, #0b79f7);
-  text-decoration-color: currentColor;       /* 호버 시 밑줄 보이기 */
-  box-shadow: inset 0 -8px 0 color-mix(in srgb, var(--card-accent) 18%, #ffd);
+  text-decoration-color:currentColor;
+  box-shadow:inset 0 -8px 0 color-mix(in srgb, var(--card-accent) 18%, #ffd);
 }
 
-/* 토글 버튼 꾸미기 */
-.port-info button{
-  appearance: none;
-  border: 2px solid var(--card-accent);
-  background: color-mix(in srgb, var(--card-accent) 12%, #fff);
-  color: #222;
-  font-weight: 700;
-  padding: 8px 14px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: transform .12s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
-}
-.port-info button:hover{
-  transform: translateY(-1px);
-  box-shadow: 0 8px 18px rgba(0,0,0,.12);
-  background: color-mix(in srgb, var(--card-accent) 18%, #fff);
-}
-.port-info button:active{
-  transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(0,0,0,.14) inset;
-}
-.port-info button:focus-visible{
-  outline: none;
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--card-accent) 40%, #fff);
+/* ===============================
+   "연속 테두리" + "색 분리선" 구현
+   - 카드 아래쪽 테두리는 제거
+   - 대신 내부에 컬러 구분띠를 그려서 여백 없이 구분
+================================ */
+.port-container:has(+ .port-role-container.open){
+  border-bottom:0;                           /* 외곽선 연결을 위해 제거 */
+  border-bottom-left-radius:0;
+  border-bottom-right-radius:0;
+  position:relative;
 }
 
-/* 비디오 모서리 조금 더 부드럽게 + 16:9 비율 유지(옵션) */
-.port-video video{
-  border-radius: 12px;
-  aspect-ratio: 16 / 9;        /* 필요 없으면 지워도 OK */
-  object-fit: cover;
+/* 내부 구분 띠(Separator) */
+.port-container:has(+ .port-role-container.open)::after{
+  content:"";
+  position:absolute; left:0; right:0; bottom:0;
+  height:18px;                               /* 띠 두께 */
+  background: var(--sep-fill);               /* 어울리는 배경색 */
+  border-top:1px solid var(--sep-line);      /* 얇은 라인으로 구분감 */
+  z-index:1;                                 /* 내부 콘텐츠 위, 외곽선 아래 */
 }
 
-/* 컨테이너 그림자/보더 살짝 강화(미묘한 다듬기) */
-.port-container{
-  box-shadow: 0 2px 10px rgba(0,0,0,.08);
-}
-.port-container:hover{
-  box-shadow: 0 14px 28px rgba(0,0,0,.14);
-}
-
-/* 롤 컨테이너 내부도 동일 스타일 상속 */
-.port-role-inner .port-info{
-  padding: 16px 20px;
+/* 역할 패널은 상단 테두리 제거하고 이어 붙이기 */
+.port-role-container{
+  border-top:0;
+  border-left-color:var(--card-border);
+  border-right-color:var(--card-border);
+  border-bottom-color:var(--card-border);
+  border-radius:0 0 16px 16px;
+  margin-top:0;                              /* 위와 딱 붙음 */
 }
 
-/* 포트 컨테이너 비디오를 인포에 맞추기 */
-.port-container{ display:flex; align-items: stretch; }
-.port-video{ display:flex; }
-.port-video video{ width:100%; height:100%; object-fit: cover; aspect-ratio:auto; }
+/* Hover 시 위/아래 외곽선 색도 동기화 */
+.port-container:hover + .port-role-container.open,
+.port-container:focus-within + .port-role-container.open{
+  border-left-color:var(--card-accent);
+  border-right-color:var(--card-accent);
+  border-bottom-color:var(--card-accent);
+}
 
-/************모바일*****************/
-/************정보를 아래로***********/
+/* 역할 내부 레이아웃 */
+.port-role-inner{ overflow:hidden; display:flex; gap:24px; }
+.port-role-inner .port-video{ flex:1 1 0; min-width:0; display:flex; }
+.port-role-inner .port-info{ flex:1 1 0; min-width:0; text-align:left; background:beige; padding:16px 20px; }
 
-/* === 모바일(<=768px) 대응 === */
-@media (max-width: 768px){
+/* ===============================
+   크기 동기화
+================================ */
+.port-container,
+.port-role-container.open .port-role-inner{
+  min-height:360px; /* 필요 시 320~420로 조절 */
+}
+
+/* 마지막 섹션 바닥 여백 */
+.App > .port-role-container.open:last-child{
+  margin-bottom:12vh;
+}
+
+/* ===============================
+   모바일(<=768px)
+================================ */
+@media (max-width:768px){
   .App{ padding:12px 12px calc(12px + env(safe-area-inset-bottom)); }
 
   .port-container,
@@ -261,58 +211,40 @@
     border-radius:12px;
   }
 
-  /* 카드: 가로 -> 세로 스택 */
   .port-container{
-    flex-direction: column;
-    align-items: stretch;
-    box-shadow: var(--shadow-sm);          /* 모바일에선 과한 그림자 줄이기 */
+    flex-direction:column;
+    align-items:stretch;
+    box-shadow:var(--shadow-sm);
   }
 
-  /* 왼쪽 포인트 바를 상단바로 변경 */
-  .port-container::before{
-    left:0; right:0; top:0; bottom:auto;
-    width:100%; height:4px;                /* 얇은 상단 라인 */
+  /* 포인트 바는 상단 전체 라인으로 유지하고, 역할에도 이어지게 */
+  .port-container::before,
+  .port-role-container::before{
+    left:0; right:unset; top:0; bottom:auto;
+    width:100%; height:4px; border-radius:0;
   }
 
-  /* 비디오/텍스트 영역 */
   .port-video{ order:1; }
   .port-info { order:2; padding:12px 14px; font-size:.95rem; }
   .port-info h3{ font-size:1rem; margin-bottom:8px; }
   .port-info p{ padding:8px 0; }
   .port-info p > strong{ padding:2px 8px; font-size:.9em; }
-  .port-info a{ word-break: break-all; }   /* 긴 URL 안전 줄바꿈 */
+  .port-info a{ word-break:break-all; }
 
-  /* 비디오는 화면폭에 맞추고 종횡비 고정 */
   .port-video video{
     width:100%; height:auto;
     aspect-ratio:16/9; object-fit:cover;
     border-radius:10px;
   }
 
-  /* 역할(슬라이드)도 세로 스택 + 전환 단순화 */
-  .port-role-inner{ flex-direction: column; gap:12px; }
-  .port-role-container{ 
-    display:block;                          /* grid 전환 대신 모바일에선 block */
-    max-height:0; opacity:0; overflow:hidden;
-    transition:max-height .36s ease, opacity .24s ease;
-    transform:none; pointer-events:none;
-    border-left-color:transparent; border-right-color:transparent;
-  }
-  .port-role-container.open{
-    max-height:80vh; opacity:1; pointer-events:auto;
-    border-left-color:var(--card-border);
-    border-right-color:var(--card-border);
-    border-bottom-color:var(--card-border);
+  .port-role-inner{ flex-direction:column; gap:12px; }
+
+  /* 내부 구분띠(모바일은 얇게) */
+  .port-container:has(+ .port-role-container.open)::after{
+    height:12px;
   }
 
-  /* 버튼은 전폭 + 엄지 친화 크기 */
-  .port-info button{
-    width:100%;
-    padding:12px 14px;
-    border-radius:12px;
-  }
-
-  /* 터치 환경에서 hover로 튀는 효과 제거 */
+  /* 터치 환경 hover 완화 */
   @media (hover:none){
     .port-container:hover,
     .port-container:focus-within{
@@ -321,30 +253,136 @@
   }
 }
 
-/* 모션 민감 사용자 배려 */
+/* ===============================
+   모션 민감
+================================ */
 @media (prefers-reduced-motion: reduce){
   .port-container, .port-role-container{ transition:none !important; }
 }
+/* === [PATCH] 포인트 바를 구분바(Separator)까지 연장 === */
+/* 구분바(::after)의 배경에 왼쪽 6px 주황 스트라이프를 함께 그리기 */
+.port-container:has(+ .port-role-container.open)::after{
+  /* 기존 height:18px, border-top 그대로 유지 가능 */
+  /* 틈새를 덮도록 2px 아래로 겹치기 */
+  bottom:-2px;                 /* ← 역할 패널과의 경계 살짝 오버랩 */
+  height:20px;                 /* 살짝 키워 경계선 가림 */
+  z-index:2;
 
-/**********마지막 여백**************/
-/* 1) 마지막 역할 패널이 열려 있으면 → 패널에 여백 */
-.App > .port-role-container.open:last-child{
-  margin-bottom: 10vh;
+  /* 왼쪽 포인트바(6px) + 구분바 배경 2중 배경 */
+  background:
+    linear-gradient(90deg, var(--card-accent) 0 6px, transparent 6px),
+    var(--sep-fill);
 }
 
-/* 2) 마지막 카드가 닫혀있어(뒤 패널이 마지막 + 닫힘) → 카드에 여백 */
-.App > .port-container:has(+ .port-role-container:last-child:not(.open)){
-  margin-bottom: 10vh;
+/* 호버할 때 구분바 상단 라인도 포인트 색으로 동기화 */
+.port-container:hover::after,
+.port-container:focus-within::after{
+  border-top-color: var(--card-accent);
 }
 
-/* 선택: 모바일에서만 더 크게 */
-@media (max-width:768px){
-  .App > .port-role-container.open:last-child,
-  .App > .port-container:has(+ .port-role-container:last-child:not(.open)){
-    margin-bottom: 14vh;
+/* === [PATCH] 호버 시 위/아래 블록 높이 차이(틈새) 제거 === */
+/* 카드가 위로 살짝 떠오를 때, 아래 역할 패널도 같이 이동 */
+.port-role-container{ 
+  transition: transform .2s ease, border-color .2s ease;
+}
+.port-container:hover + .port-role-container.open,
+.port-container:focus-within + .port-role-container.open{
+  transform: translateY(-4px);   /* 카드의 hover transform과 동일 */
+  border-left-color: var(--card-accent);
+  border-right-color: var(--card-accent);
+  border-bottom-color: var(--card-accent);
+}
+
+/* hover 중에도 ‘연속 테두리’ 유지: 카드 하단 테두리가 다시 생기지 않게 */
+.port-container:hover:has(+ .port-role-container.open){
+  border-bottom-color: transparent;
+}
+
+/* (선택) 작은 디스플레이에서 구분바 오버랩 값 미세 조정 */
+@media (max-width: 768px){
+  .port-container:has(+ .port-role-container.open)::after{
+    bottom:-1px;
+    height:14px;
   }
 }
+/* =========================================
+   PATCH 1) 구분바·롤컨테이너 hover 시 포인트바 숨기기
+   - 좌측 주황 포인트바(::before) 투명화
+   - 구분바(::after)의 주황 스트라이프 제거
+========================================= */
+.port-container::before,
+.port-role-container::before{
+  transition: opacity .18s ease;
+}
 
-h4{
-  color: #f59e0b;
+.port-container:hover::before,
+.port-container:focus-within::before,
+.port-role-container:hover::before,
+.port-role-container:focus-within::before{
+  opacity: 0; /* 포인트바 감추기 */
+}
+
+/* 구분바에 그려둔 주황 스트라이프 제거(카드 hover/포커스·롤 hover 모두) */
+.port-container:hover::after,
+.port-container:focus-within::after,
+.port-container:has(+ .port-role-container.open:hover)::after,
+.port-container:has(+ .port-role-container.open:focus-within)::after{
+  background: var(--sep-fill);     /* 스트라이프 없는 배경 */
+  border-top-color: var(--card-accent);
+}
+
+/* =========================================
+   PATCH 2) 롤컨테이너에도 카드와 동일한 hover 효과
+   - 그림자/보더/배경 강조
+   - 내부 비디오 확대 효과
+   - 이음새 틈새 방지 위해 카드도 함께 동기 이동
+========================================= */
+/* 롤 hover 자체 효과 */
+.port-role-container{
+  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+.port-role-container:hover,
+.port-role-container:focus-within{
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-left-color: var(--card-accent);
+  border-right-color: var(--card-accent);
+  border-bottom-color: var(--card-accent);
+  background: linear-gradient(180deg, #fff, color-mix(in srgb, var(--card-accent) 6%, #fff));
+}
+
+/* 롤 hover 시 비디오 확대/그림자 */
+.port-role-container:hover .port-video video,
+.port-role-container:focus-within .port-video video{
+  transform: scale(1.02);
+  box-shadow: 0 18px 40px rgba(0,0,0,.30), 0 6px 12px rgba(0,0,0,.18), 0 0 0 1px color-mix(in srgb, var(--card-accent) 35%, #0000);
+}
+
+/* 롤 hover 때 카드도 함께 색상/이동 동기화 → 이음새 틈새 방지 */
+.port-container:has(+ .port-role-container.open:hover),
+.port-container:has(+ .port-role-container.open:focus-within){
+  transform: translateY(-4px);
+  border-color: var(--card-accent);
+  box-shadow: var(--shadow-lg);
+}
+
+/* 연속 테두리 유지: 카드 하단 테두리는 계속 투명 */
+.port-container:has(+ .port-role-container.open:hover){
+  border-bottom-color: transparent;
+}
+
+/* 구분바 오버랩(틈새 방지) 재적용 */
+.port-container:has(+ .port-role-container.open:hover)::after{
+  bottom: -2px;
+  height: 20px;
+  background: var(--sep-fill); /* 스트라이프 없이 */
+  border-top-color: var(--card-accent);
+}
+
+/* 모바일에서 미세 조정 */
+@media (max-width:768px){
+  .port-container:has(+ .port-role-container.open:hover)::after{
+    bottom:-1px;
+    height:14px;
+  }
 }
