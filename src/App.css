@@ -386,3 +386,86 @@ h4{ color:#f59e0b; }
     height:14px;
   }
 }
+/* ============================
+   MOBILE PATCH: 하나의 블록 테두리, 포인트바 제거
+   (<=768px에서만 적용)
+============================ */
+@media (max-width: 768px){
+
+  /* 1) 포인트바(상단 라인) 완전 제거 */
+  .port-container::before,
+  .port-role-container::before{
+    display: none !important;
+    content: none !important;
+  }
+
+  /* 2) 구분바(Separator)도 제거 → 하나의 면처럼 */
+  .port-container:has(+ .port-role-container.open)::after{
+    display: none !important;
+    content: none !important;
+  }
+
+  /* 3) 두 블록을 한 덩어리처럼: 윗 블록은 하단 테두리 제거,
+        아래 블록은 상단 테두리 제거 + 아래쪽 테두리 유지 */
+  .port-container:has(+ .port-role-container.open){
+    border-bottom: 0;                     /* 중간 seam 제거 */
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .port-role-container{
+    border-top: 0;                         /* 중간 seam 제거 */
+    border-left-color: var(--card-border); /* 외곽선을 역할이 이어받음 */
+    border-right-color: var(--card-border);
+    border-bottom-color: var(--card-border);
+    border-radius: 0 0 12px 12px;          /* 아래쪽만 둥글게 */
+    box-shadow: var(--shadow-sm);          /* 카드와 톤 맞춤 */
+  }
+
+  /* 4) 여백은 외부에서만: 두 블록 사이 margin 제거 */
+  .port-role-container.open{
+    margin-top: 0 !important;
+    margin-bottom: 24px;                   /* 다음 카드와 간격 */
+  }
+
+  /* 5) 터치 환경 hover 무효화로 미세 흔들림 방지(이미 있었으면 그대로) */
+  @media (hover:none){
+    .port-container:hover,
+    .port-container:focus-within,
+    .port-role-container:hover,
+    .port-role-container:focus-within{
+      transform: none;
+      box-shadow: var(--shadow-sm);
+      border-color: var(--card-border);
+    }
+  }
+}
+
+/* === MOBILE: 단일 블록을 주황색 테두리로 === */
+@media (max-width: 768px){
+  /* 카드가 역할을 동반할 때: 카드(윗부분) 테두리 주황 + 하단은 제거 */
+  .port-container:has(+ .port-role-container.open){
+    border-color: var(--card-accent) !important;
+    border-bottom: 0 !important;           /* 중간 이음새 제거 */
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+  }
+
+  /* 역할(아래부분) 테두리도 주황으로 이어받기 */
+  .port-role-container{
+    border-top: 0 !important;
+    border-left-color: var(--card-accent) !important;
+    border-right-color: var(--card-accent) !important;
+    border-bottom-color: var(--card-accent) !important;
+    border-radius: 0 0 12px 12px;          /* 아래쪽만 둥글게 */
+  }
+
+  /* 터치환경에서도 주황 테두리 유지 */
+  @media (hover:none){
+    .port-container:has(+ .port-role-container.open),
+    .port-role-container{
+      border-color: var(--card-accent) !important;
+      box-shadow: var(--shadow-sm);
+      transform: none;
+    }
+  }
+}
